@@ -4,31 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:replace="${title}">Novo SIGA</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
 </head>
 <body>
-    <header>
-        <h2>Novo SIGA - Portal Acadêmico</h2>
-        <nav>
-            <ul>
-                <li><a th:href="@{/novosiga}">Início</a></li>
-                <li><a th:href="@{/alunos/listar}">Alunos</a></li>
-                <li><a th:href="@{/professores/listar}">Professores</a></li>
-                <li><a th:href="@{/cursos/listar}">Cursos</a></li>
-                <li><a th:href="@{/disciplinas/listar}">Disciplinas</a></li>
-                <li><a th:href="@{/produtos/listar}">Produtos</a></li>
-                <li><a th:href="@{/pedidos/listar}">Pedidos</a></li>
-            </ul>
-        </nav>
-        <hr>
+    <header class="main-header">
+        <div class="header-container">
+            <a th:href="@{/novosiga}" class="brand">
+                <span class="brand-badge">FATEC</span>
+                <h2>Novo SIGA <span class="brand-sub">| Portal Acadêmico</span></h2>
+            </a>
+            <nav class="main-nav">
+                <ul>
+                    <li><a th:href="@{/novosiga}" th:classappend="${activePage == 'home'} ? 'active' : ''">Início</a></li>
+                    <li><a th:href="@{/alunos/listar}" th:classappend="${activePage != null and activePage.startsWith('aluno')} ? 'active' : ''">Alunos</a></li>
+                    <li><a th:href="@{/professores/listar}" th:classappend="${activePage != null and activePage.startsWith('professor')} ? 'active' : ''">Professores</a></li>
+                    <li><a th:href="@{/cursos/listar}" th:classappend="${activePage != null and activePage.startsWith('curso')} ? 'active' : ''">Cursos</a></li>
+                    <li><a th:href="@{/disciplinas/listar}" th:classappend="${activePage != null and activePage.startsWith('disciplina')} ? 'active' : ''">Disciplinas</a></li>
+                    <li><a th:href="@{/produtos/listar}" th:classappend="${activePage != null and activePage.startsWith('produto')} ? 'active' : ''">Produtos</a></li>
+                    <li><a th:href="@{/pedidos/listar}" th:classappend="${activePage != null and activePage.startsWith('pedido')} ? 'active' : ''">Pedidos</a></li>
+                </ul>
+            </nav>
+        </div>
     </header>
 
-    <main>
-        <div th:replace="${content}"></div>
+    <main class="main-content">
+        <div class="card-container">
+            <div th:replace="${content}"></div>
+        </div>
     </main>
 
-    <footer>
-        <hr>
-        <p>Novo SIGA &mdash; Sistema de Gestão Acadêmica</p>
+    <footer class="main-footer">
+        <p>Novo SIGA &mdash; Sistema de Gestão Acadêmica &bull; FATEC</p>
     </footer>
 </body>
 </html>

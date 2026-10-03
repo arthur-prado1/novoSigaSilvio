@@ -33,5 +33,7 @@ public class AlunoService {
         return alunoRepository.findById(id).orElse(null);
     }
 
-    public List<AlunoCursoDTO> listarAlunosPorCurso
+    public List<com.novosiga.novosiga.dto.AlunoCurso> listarAlunosPorCurso() {
+        return alunoRepository.findAlunosComCursos();
+    }
 }

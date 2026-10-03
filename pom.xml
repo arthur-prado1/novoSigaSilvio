@@ -18,6 +18,7 @@
 
     <properties>
         <java.version>17</java.version>
+        <lombok.version>1.18.36</lombok.version>
     </properties>
 
     <dependencies>
@@ -59,6 +60,13 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <!-- OpenHTMLtoPDF: Geração de relatórios PDF a partir de HTML/Thymeleaf -->
+        <dependency>
+            <groupId>io.github.openhtmltopdf</groupId>
+            <artifactId>openhtmltopdf-pdfbox</artifactId>
+            <version>1.1.86</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -79,6 +87,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
+                    <fork>true</fork>
+                    <executable>C:\Users\Alunos\.jdks\corretto-17.0.5\bin\javac.exe</executable>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.projectlombok</groupId>

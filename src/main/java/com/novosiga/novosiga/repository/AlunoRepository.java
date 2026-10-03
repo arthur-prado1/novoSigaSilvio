@@ -10,7 +10,7 @@ import java.util.List;
 public interface AlunoRepository extends JpaRepository<Aluno, Integer> {
 
     @Query("""
-        select new com.novosiga.novosiga.dto.AlunoCursoDTO(
+        select new com.novosiga.novosiga.dto.AlunoCurso(
             a.nomeAluno,
             c.nomeCurso
             )

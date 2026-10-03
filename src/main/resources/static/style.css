@@ -1,0 +1,500 @@
+/* ========================================================
+   Novo SIGA - Estilo Visual FATEC
+   ======================================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f0f2f5;
+    color: #333333;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ========================================================
+   HEADER & NAVEGAÇÃO
+   ======================================================== */
+.main-header {
+    background-color: #b30000; /* Vermelho característico da FATEC */
+    color: #ffffff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 12px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: #ffffff;
+}
+
+.brand-badge {
+    background-color: #ffffff;
+    color: #b30000;
+    font-weight: 800;
+    font-size: 13px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+}
+
+.brand h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.brand-sub {
+    font-size: 13px;
+    font-weight: 400;
+    opacity: 0.85;
+}
+
+.main-nav ul {
+    display: flex;
+    list-style: none;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.main-nav a {
+    color: #ffffff;
+    text-decoration: none;
+    padding: 8px 14px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.2s ease, opacity 0.2s ease;
+    display: inline-block;
+}
+
+.main-nav a:hover {
+    background-color: #800000;
+}
+
+.main-nav a.active {
+    background-color: #800000;
+    box-shadow: inset 0 -2px 0 #ffffff;
+    font-weight: 600;
+}
+
+/* ========================================================
+   CONTEÚDO PRINCIPAL (CARD CONTAINER)
+   ======================================================== */
+.main-content {
+    flex: 1;
+    max-width: 1200px;
+    width: 95%;
+    margin: 25px auto;
+}
+
+/* Card central onde o conteúdo é renderizado */
+.main-content > div,
+.card-container,
+.login-container {
+    background-color: #ffffff;
+    padding: 35px;
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+/* Títulos das páginas */
+h1 {
+    color: #b30000;
+    font-size: 26px;
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+
+h2 {
+    color: #b30000;
+    font-size: 20px;
+    margin-bottom: 12px;
+}
+
+h3 {
+    color: #444444;
+    font-size: 17px;
+    margin-bottom: 10px;
+}
+
+p {
+    color: #555555;
+    font-size: 14.5px;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+/* Links gerais */
+a {
+    color: #b30000;
+    text-decoration: none;
+    transition: color 0.2s, text-decoration 0.2s;
+}
+
+a:hover {
+    color: #800000;
+    text-decoration: underline;
+}
+
+/* Botões de Ação de Topo (ex: "+ Novo Aluno") */
+a[href*="/criar"],
+.btn-new {
+    display: inline-block;
+    background-color: #b30000;
+    color: #ffffff !important;
+    padding: 9px 18px;
+    border-radius: 4px;
+    text-decoration: none !important;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    margin-bottom: 15px;
+}
+
+a[href*="/criar"]:hover,
+.btn-new:hover {
+    background-color: #800000;
+}
+
+/* Link de voltar */
+a[href*="/listar"]:not(.btn-new):not(.btn-action) {
+    display: inline-block;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+/* ========================================================
+   FORMULÁRIOS
+   ======================================================== */
+form {
+    margin-top: 15px;
+}
+
+fieldset {
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 22px;
+    margin-bottom: 24px;
+    background-color: #fafbfc;
+}
+
+legend {
+    color: #b30000;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 0 10px;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    color: #333333;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="number"],
+input[type="email"],
+input[type="date"],
+input[type="file"],
+textarea,
+select {
+    width: 100%;
+    max-width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    font-size: 14.5px;
+    background-color: #ffffff;
+    color: #333333;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    margin-bottom: 6px;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: #b30000;
+    box-shadow: 0 0 0 3px rgba(179, 0, 0, 0.12);
+}
+
+/* Botões do Formulário */
+button,
+button[type="submit"] {
+    background-color: #b30000;
+    color: #ffffff;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 4px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    display: inline-block;
+}
+
+button:hover,
+button[type="submit"]:hover {
+    background-color: #800000;
+}
+
+/* Botão Secundário / Cancelar */
+a[href*="/listar"]:not(.btn-new):has(+ button),
+a:has(+ button[type="submit"]),
+form a[href*="/listar"] {
+    display: inline-block;
+    background-color: #e2e8f0;
+    color: #475569 !important;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 14.5px;
+    font-weight: 500;
+    text-decoration: none !important;
+    margin-right: 12px;
+    transition: background-color 0.2s;
+}
+
+form a[href*="/listar"]:hover {
+    background-color: #cbd5e1;
+}
+
+/* Botão Buscar CEP */
+#btn-buscar-cep {
+    background-color: #475569;
+    color: #ffffff;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 4px;
+    font-size: 13px;
+    cursor: pointer;
+    margin-top: 4px;
+}
+
+#btn-buscar-cep:hover {
+    background-color: #334155;
+}
+
+#cep-feedback {
+    display: inline-block;
+    margin-left: 10px;
+    font-size: 13px;
+    color: #b30000;
+    font-weight: 500;
+}
+
+/* Preview de Foto */
+#photo-preview-container {
+    margin: 10px 0 15px;
+}
+
+#image-preview {
+    border-radius: 6px;
+    border: 2px solid #e2e8f0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    max-width: 150px;
+    display: block;
+}
+
+#image-placeholder {
+    color: #888888;
+    font-style: italic;
+    font-size: 13px;
+}
+
+/* ========================================================
+   TABELAS DE DADOS
+   ======================================================== */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    margin-bottom: 20px;
+    background-color: #ffffff;
+    border-radius: 6px;
+    overflow: hidden;
+    border: none !important;
+}
+
+thead th,
+th {
+    background-color: #b30000 !important;
+    color: #ffffff !important;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 12px 14px;
+    text-align: left;
+    border: none !important;
+}
+
+tbody td,
+td {
+    padding: 12px 14px;
+    border-top: none !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    color: #333333;
+    font-size: 14px;
+    vertical-align: middle;
+}
+
+tbody tr:hover td {
+    background-color: #f8fafc;
+}
+
+/* Imagem do aluno na tabela */
+td img {
+    border-radius: 4px;
+    object-fit: cover;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Ações na Tabela (Editar / Excluir) */
+td a[href*="/editar/"],
+td a[href*="/excluir/"],
+.btn-action {
+    display: inline-block;
+    padding: 5px 11px;
+    border-radius: 4px;
+    font-size: 12.5px;
+    font-weight: 600;
+    text-decoration: none !important;
+    transition: opacity 0.2s, background-color 0.2s;
+    margin-right: 4px;
+}
+
+td a[href*="/editar/"],
+.btn-edit {
+    background-color: #475569;
+    color: #ffffff !important;
+}
+
+td a[href*="/editar/"]:hover,
+.btn-edit:hover {
+    background-color: #334155;
+}
+
+td a[href*="/excluir/"],
+.btn-delete {
+    background-color: #b30000;
+    color: #ffffff !important;
+}
+
+td a[href*="/excluir/"]:hover,
+.btn-delete:hover {
+    background-color: #800000;
+}
+
+/* ========================================================
+   HOME PAGE (FATEC JALES)
+   ======================================================== */
+.main-content section {
+    text-align: center;
+    padding: 20px 10px;
+}
+
+.main-content section header p:first-child {
+    color: #b30000;
+    font-weight: 800;
+    font-size: 18px;
+    letter-spacing: 1px;
+    margin-bottom: 2px;
+}
+
+.main-content section header p:last-child {
+    color: #64748b;
+    font-size: 13.5px;
+    margin-bottom: 15px;
+}
+
+.main-content section h1 {
+    font-size: 32px;
+    margin-bottom: 15px;
+}
+
+.main-content section > p {
+    max-width: 700px;
+    margin: 0 auto 20px auto;
+    font-size: 16px;
+    color: #475569;
+}
+
+.main-content section a[href*="fatecjales"] {
+    display: inline-block;
+    background-color: #b30000;
+    color: #ffffff !important;
+    padding: 11px 22px;
+    border-radius: 4px;
+    font-weight: 600;
+    text-decoration: none !important;
+    margin-bottom: 25px;
+    transition: background-color 0.2s;
+}
+
+.main-content section a[href*="fatecjales"]:hover {
+    background-color: #800000;
+}
+
+.main-content section img {
+    max-width: 100%;
+    height: auto;
+    max-height: 400px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+    margin-bottom: 25px;
+    object-fit: cover;
+}
+
+.main-content section footer p {
+    color: #94a3b8;
+    font-size: 13px;
+}
+
+/* ========================================================
+   RODAPÉ
+   ======================================================== */
+.main-footer {
+    background-color: #ffffff;
+    border-top: 1px solid #e2e8f0;
+    padding: 18px 24px;
+    text-align: center;
+    margin-top: auto;
+}
+
+.main-footer p {
+    color: #64748b;
+    font-size: 13px;
+    margin-bottom: 0;
+}
+
+/* Linhas separadoras padrão */
+hr {
+    display: none;
+}

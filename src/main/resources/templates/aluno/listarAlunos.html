@@ -6,28 +6,30 @@
 </head>
 <body>
     <div th:fragment="content">
-        <div>
-            <h1>Lista de Alunos</h1>
-            <p>
-                <span th:text="${#lists.size(alunos)}">0</span> registros encontrados na base.
-            </p>
-            <p>
-                <a th:href="@{/alunos/criar}">Novo Aluno</a>
-            </p>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+            <div>
+                <h1>Lista de Alunos</h1>
+                <p style="margin-bottom: 0;">
+                    <strong th:text="${#lists.size(alunos)}">0</strong> alunos cadastrados no sistema.
+                </p>
+            </div>
+            <div>
+                <a th:href="@{/alunos/criar}" class="btn-new">+ Novo Aluno</a>
+            </div>
         </div>
 
-        <div th:if="${not #lists.isEmpty(alunos)}">
-            <table border="1">
+        <div class="table-container" th:if="${not #lists.isEmpty(alunos)}">
+            <table>
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Foto</th>
-                        <th>Aluno</th>
+                        <th style="width: 60px;">ID</th>
+                        <th style="width: 70px;">Foto</th>
+                        <th>Nome do Aluno</th>
                         <th>Curso</th>
                         <th>CPF</th>
                         <th>Telefone</th>
-                        <th>Cidade/UF</th>
-                        <th>Ações</th>
+                        <th>Cidade / UF</th>
+                        <th style="width: 150px; text-align: center;">Ações</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -37,34 +39,38 @@
                             <img th:if="${aluno.fotoAluno != null}"
                                  th:src="@{/alunos/foto/{id}(id=${aluno.idAluno})}"
                                  alt="Foto do Aluno"
-                                 width="50">
-                            <span th:if="${aluno.fotoAluno == null}">Sem foto</span>
+                                 width="45"
+                                 height="45"
+                                 style="border-radius: 50%; object-fit: cover;">
+                            <span th:if="${aluno.fotoAluno == null}" style="color: #94a3b8; font-size: 12px;">Sem foto</span>
                         </td>
-                        <td th:text="${aluno.nomeAluno}"></td>
+                        <td><strong th:text="${aluno.nomeAluno}"></strong></td>
                         <td>
                             <span th:if="${aluno.curso != null}" th:text="${aluno.curso.nomeCurso}"></span>
-                            <span th:if="${aluno.curso == null}">Sem curso</span>
+                            <span th:if="${aluno.curso == null}" style="color: #94a3b8; font-style: italic;">Sem curso</span>
                         </td>
                         <td th:text="${aluno.cpfAluno}"></td>
                         <td th:text="${aluno.telefoneAluno}"></td>
                         <td>
-                            <span th:text="${aluno.cidadeAluno}"></span>/<span th:text="${aluno.estadoAluno}"></span>
+                            <span th:text="${aluno.cidadeAluno}"></span> / <span th:text="${aluno.estadoAluno}"></span>
                         </td>
-                        <td>
-                            <a th:href="@{/alunos/editar/{id}(id=${aluno.idAluno})}">Editar</a>
-                            |
-                            <a th:href="@{/alunos/excluir/{id}(id=${aluno.idAluno})}"
-                               onclick="return confirm('Deseja realmente excluir este aluno?')">Excluir</a>
+                        <td style="text-align: center;">
+                            <div style="display: inline-flex; gap: 6px;">
+                                <a th:href="@{/alunos/editar/{id}(id=${aluno.idAluno})}" class="btn-edit">Editar</a>
+                                <a th:href="@{/alunos/excluir/{id}(id=${aluno.idAluno})}"
+                                   class="btn-delete"
+                                   onclick="return confirm('Deseja realmente excluir este aluno?')">Excluir</a>
+                            </div>
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
-        <div th:if="${#lists.isEmpty(alunos)}">
+        <div th:if="${#lists.isEmpty(alunos)}" style="text-align: center; padding: 40px 20px;">
             <h3>Nenhum aluno cadastrado</h3>
-            <p>Não existem registros de alunos na base.</p>
-            <p><a th:href="@{/alunos/criar}">Cadastrar Aluno</a></p>
+            <p>Não existem registros de alunos no momento.</p>
+            <p><a th:href="@{/alunos/criar}" class="btn-new">+ Cadastrar Primeiro Aluno</a></p>
         </div>
     </div>
 </body>
