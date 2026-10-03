@@ -19,6 +19,13 @@ import com.novosiga.novosiga.entity.Curso;
 import com.novosiga.novosiga.service.AlunoService;
 import com.novosiga.novosiga.service.CursoService;
 
+import com.novosiga.novosiga.service.PdfService;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.thymeleaf.context.Context;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 @Controller
 @RequestMapping("/alunos")
 public class AlunoController {
@@ -29,6 +36,9 @@ public class AlunoController {
 
     @Autowired
     private CursoService cursoService;
+
+    @Autowired
+    private PdfService pdfService;
 
     // Método para salvar um aluno
     @PostMapping("/salvar")
@@ -101,5 +111,27 @@ public class AlunoController {
         return ResponseEntity.ok()
                 .contentType(org.springframework.http.MediaType.parseMediaType(aluno.getTipoFoto()))
                 .body(aluno.getFotoAluno());
+    }
+
+    // Método para gerar o relatório de alunos em PDF
+    @GetMapping("/relatorio-pdf")
+    public ResponseEntity<byte[]> gerarRelatorioPdf() {
+        try {
+            List<Aluno> alunos = alunoService.findAll();
+
+            Context context = new Context();
+            context.setVariable("alunos", alunos);
+            context.setVariable("dataGeracao", LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy 'às' HH:mm:ss")));
+
+            byte[] pdfBytes = pdfService.gerarPdfDeHtml("aluno/relatorioAlunosPdf", context);
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=relatorio-alunos.pdf")
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .body(pdfBytes);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
     }
 }

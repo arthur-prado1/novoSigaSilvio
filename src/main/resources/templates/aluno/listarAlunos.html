@@ -13,7 +13,8 @@
                     <strong th:text="${#lists.size(alunos)}">0</strong> alunos cadastrados no sistema.
                 </p>
             </div>
-            <div>
+            <div style="display: flex; gap: 10px;">
+                <a th:href="@{/alunos/relatorio-pdf}" target="_blank" class="btn-pdf">📄 Gerar Relatório PDF</a>
                 <a th:href="@{/alunos/criar}" class="btn-new">+ Novo Aluno</a>
             </div>
         </div>

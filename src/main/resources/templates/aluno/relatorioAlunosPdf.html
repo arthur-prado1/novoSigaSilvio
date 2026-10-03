@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Relatório de Alunos - Novo SIGA</title>
+    <style>
+        @page {
+            size: A4 portrait;
+            margin: 15mm 12mm 15mm 12mm;
+            @bottom-right {
+                content: "Página " counter(page) " de " counter(pages);
+                font-size: 8pt;
+                color: #64748b;
+                font-family: Arial, sans-serif;
+            }
+            @bottom-left {
+                content: "Novo SIGA - FATEC JALES";
+                font-size: 8pt;
+                color: #64748b;
+                font-family: Arial, sans-serif;
+            }
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 10pt;
+            color: #1e293b;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Cabeçalho do Relatório */
+        .report-header {
+            border-bottom: 2px solid #b30000;
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+        }
+
+        .header-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .header-table td {
+            border: none;
+            padding: 0;
+            vertical-align: middle;
+        }
+
+        .institution-title {
+            font-size: 14pt;
+            font-weight: bold;
+            color: #b30000;
+            margin: 0 0 4px 0;
+        }
+
+        .sub-institution {
+            font-size: 9pt;
+            color: #475569;
+            margin: 0;
+        }
+
+        .report-title {
+            font-size: 12pt;
+            font-weight: bold;
+            color: #0f172a;
+            margin: 6px 0 0 0;
+        }
+
+        .report-metadata {
+            text-align: right;
+            font-size: 8.5pt;
+            color: #64748b;
+            line-height: 1.4;
+        }
+
+        /* Resumo / Estatísticas */
+        .summary-box {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            padding: 8px 12px;
+            margin-bottom: 15px;
+            font-size: 9.5pt;
+        }
+
+        .summary-box strong {
+            color: #b30000;
+        }
+
+        /* Tabela de Alunos */
+        table.data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        table.data-table th {
+            background-color: #b30000;
+            color: #ffffff;
+            font-size: 8.5pt;
+            font-weight: bold;
+            text-align: left;
+            padding: 8px 6px;
+            border: 1px solid #b30000;
+        }
+
+        table.data-table td {
+            font-size: 8.5pt;
+            padding: 6px;
+            border-bottom: 1px solid #e2e8f0;
+            border-left: 1px solid #f1f5f9;
+            border-right: 1px solid #f1f5f9;
+        }
+
+        table.data-table tr:nth-child(even) td {
+            background-color: #f8fafc;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 30px;
+            color: #64748b;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Cabeçalho Oficial -->
+    <div class="report-header">
+        <table class="header-table">
+            <tr>
+                <td style="width: 65%;">
+                    <div class="institution-title">FATEC - Faculdade de Tecnologia</div>
+                    <div class="sub-institution">Centro Paula Souza &bull; Governo do Estado de São Paulo</div>
+                    <div class="report-title">Novo SIGA &mdash; Relatório Geral de Alunos</div>
+                </td>
+                <td style="width: 35%;" class="report-metadata">
+                    <div><strong>Data de Emissão:</strong></div>
+                    <div th:text="${dataGeracao}">01/01/2026 às 12:00:00</div>
+                    <div><strong>Sistema:</strong> Novo SIGA v1.0</div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Caixa de Resumo -->
+    <div class="summary-box">
+        Total de Alunos Listados: <strong th:text="${#lists.size(alunos)}">0</strong> discente(s)
+    </div>
+
+    <!-- Tabela de Registros -->
+    <table class="data-table" th:if="${not #lists.isEmpty(alunos)}">
+        <thead>
+            <tr>
+                <th style="width: 35px;" class="text-center">ID</th>
+                <th style="width: 160px;">Nome do Aluno</th>
+                <th style="width: 130px;">Curso</th>
+                <th style="width: 85px;">CPF</th>
+                <th style="width: 80px;">Telefone</th>
+                <th>Cidade / UF</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="aluno : ${alunos}">
+                <td class="text-center" th:text="${aluno.idAluno}">1</td>
+                <td><strong th:text="${aluno.nomeAluno}">Nome do Aluno</strong></td>
+                <td>
+                    <span th:if="${aluno.curso != null}" th:text="${aluno.curso.nomeCurso}">Curso</span>
+                    <span th:if="${aluno.curso == null}" style="color: #94a3b8;">Não atribuído</span>
+                </td>
+                <td th:text="${aluno.cpfAluno}">000.000.000-00</td>
+                <td th:text="${aluno.telefoneAluno}">(00) 00000-0000</td>
+                <td>
+                    <span th:text="${aluno.cidadeAluno}">Cidade</span> / <span th:text="${aluno.estadoAluno}">UF</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Mensagem se vazia -->
+    <div th:if="${#lists.isEmpty(alunos)}" class="empty-message">
+        Nenhum registro de aluno cadastrado na base de dados até o momento.
+    </div>
+
+</body>
+</html>
