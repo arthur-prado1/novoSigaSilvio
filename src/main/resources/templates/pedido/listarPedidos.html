@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, 'pedido-listar', ~{::content})}">
+<head>
+    <title>Lista de Pedidos | Novo SIGA</title>
+</head>
+<body>
+    <div th:fragment="content">
+        <div>
+            <h1>Lista de Pedidos</h1>
+            <p>
+                <span th:text="${#lists.size(pedidos)}">0</span> registros encontrados na base.
+            </p>
+            <p>
+                <a th:href="@{/pedidos/criar}">Novo Pedido</a>
+            </p>
+        </div>
+
+        <div th:if="${not #lists.isEmpty(pedidos)}">
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Aluno</th>
+                        <th>Data</th>
+                        <th>Total</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="ped : ${pedidos}">
+                        <td th:text="${ped.idPedido}"></td>
+                        <td>
+                            <span th:text="${ped.aluno != null ? ped.aluno.nomeAluno : 'Aluno não identificado'}"></span>
+                            <span th:if="${ped.aluno != null}" th:text="' (CPF: ' + ${ped.aluno.cpfAluno} + ')'"></span>
+                        </td>
+                        <td th:text="${ped.dataPedido != null ? #temporals.format(ped.dataPedido, 'dd/MM/yyyy') : '-'}"></td>
+                        <td th:text="${ped.totalPedido != null ? 'R$ ' + #numbers.formatDecimal(ped.totalPedido, 1, 2, 'COMMA') : '-'}"></td>
+                        <td>
+                            <a th:href="@{/pedidos/editar/{id}(id=${ped.idPedido})}">Editar</a>
+                            |
+                            <a th:href="@{/pedidos/excluir/{id}(id=${ped.idPedido})}"
+                               onclick="return confirm('Deseja realmente excluir este pedido?')">Excluir</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div th:if="${#lists.isEmpty(pedidos)}">
+            <h3>Nenhum pedido cadastrado</h3>
+            <p>Não existem registros de pedidos cadastrados na base.</p>
+            <p><a th:href="@{/pedidos/criar}">Cadastrar Pedido</a></p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, 'disciplina-listar', ~{::content})}">
+<head>
+    <title>Lista de Disciplinas | Novo SIGA</title>
+</head>
+<body>
+    <div th:fragment="content">
+        <div>
+            <h1>Lista de Disciplinas</h1>
+            <p>
+                <span th:text="${#lists.size(disciplinas)}">0</span> disciplinas encontradas na base.
+            </p>
+            <p>
+                <a th:href="@{/disciplinas/criar}">Nova Disciplina</a>
+            </p>
+        </div>
+
+        <div th:if="${not #lists.isEmpty(disciplinas)}">
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Disciplina</th>
+                        <th>Sigla</th>
+                        <th>Curso</th>
+                        <th>Professor Responsável</th>
+                        <th>Carga Horária</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="disciplina : ${disciplinas}">
+                        <td th:text="${disciplina.idDisciplina}"></td>
+                        <td th:text="${disciplina.nomeDisciplina}"></td>
+                        <td th:text="${disciplina.siglaDisciplina}"></td>
+                        <td>
+                            <span th:if="${disciplina.curso != null}" th:text="${disciplina.curso.nomeCurso}"></span>
+                            <span th:if="${disciplina.curso == null}">Sem curso</span>
+                        </td>
+                        <td>
+                            <span th:if="${disciplina.professor != null}" th:text="${disciplina.professor.nomeProfessor}"></span>
+                            <span th:if="${disciplina.professor == null}">Sem professor</span>
+                        </td>
+                        <td th:text="${disciplina.cargaHorariaDisciplina} + ' h'"></td>
+                        <td>
+                            <a th:href="@{/disciplinas/editar/{id}(id=${disciplina.idDisciplina})}">Editar</a>
+                            |
+                            <a th:href="@{/disciplinas/excluir/{id}(id=${disciplina.idDisciplina})}"
+                               onclick="return confirm('Deseja realmente excluir esta disciplina?')">Excluir</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div th:if="${#lists.isEmpty(disciplinas)}">
+            <h3>Nenhuma disciplina cadastrada</h3>
+            <p>Não existem disciplinas acadêmicas cadastradas na base.</p>
+            <p><a th:href="@{/disciplinas/criar}">Cadastrar Disciplina</a></p>
+        </div>
+    </div>
+</body>
+</html>

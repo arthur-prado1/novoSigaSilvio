@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, 'produto-listar', ~{::content})}">
+<head>
+    <title>Lista de Produtos | Novo SIGA</title>
+</head>
+<body>
+    <div th:fragment="content">
+        <div>
+            <h1>Lista de Produtos</h1>
+            <p>
+                <span th:text="${#lists.size(produtos)}">0</span> registros encontrados na base.
+            </p>
+            <p>
+                <a th:href="@{/produtos/criar}">Novo Produto</a>
+            </p>
+        </div>
+
+        <div th:if="${not #lists.isEmpty(produtos)}">
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Imagem</th>
+                        <th>Descrição</th>
+                        <th>Marca</th>
+                        <th>Modelo</th>
+                        <th>Preço</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="prod : ${produtos}">
+                        <td th:text="${prod.idProduto}"></td>
+                        <td>
+                            <img th:if="${prod.imagem != null}"
+                                 th:src="@{/produtos/imagem/{id}(id=${prod.idProduto})}"
+                                 alt="Imagem do Produto"
+                                 width="50">
+                            <span th:if="${prod.imagem == null}">Sem imagem</span>
+                        </td>
+                        <td th:text="${prod.descricao}"></td>
+                        <td th:text="${prod.marca}"></td>
+                        <td th:text="${prod.modelo}"></td>
+                        <td th:text="${prod.valor != null ? 'R$ ' + #numbers.formatDecimal(prod.valor, 1, 2, 'COMMA') : '-'}"></td>
+                        <td>
+                            <a th:href="@{/produtos/editar/{id}(id=${prod.idProduto})}"}>Editar</a>
+                            |
+                            <a th:href="@{/produtos/excluir/{id}(id=${prod.idProduto})}"
+                               onclick="return confirm('Deseja realmente excluir este produto?')">Excluir</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div th:if="${#lists.isEmpty(produtos)}">
+            <h3>Nenhum produto cadastrado</h3>
+            <p>Não existem registros de produtos cadastrados na base.</p>
+            <p><a th:href="@{/produtos/criar}">Cadastrar Produto</a></p>
+        </div>
+    </div>
+</body>
+</html>

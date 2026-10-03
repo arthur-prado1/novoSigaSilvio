@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, 'produto-criar', ~{::content})}">
+<head>
+    <title th:text="${produto.idProduto != null ? 'Editar Produto | Novo SIGA' : 'Cadastrar Produto | Novo SIGA'}">Cadastrar Produto | Novo SIGA</title>
+</head>
+<body>
+    <div th:fragment="content">
+        <div>
+            <p><a th:href="@{/produtos/listar}">&larr; Voltar para a lista</a></p>
+            <h1 th:text="${produto.idProduto != null ? 'Editar Produto' : 'Cadastrar Produto'}">Cadastrar Produto</h1>
+        </div>
+
+        <form th:action="@{/produtos/salvar}" th:object="${produto}" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="idProduto" th:field="*{idProduto}">
+
+            <fieldset>
+                <legend>Informações do Produto</legend>
+
+                <p>
+                    <label for="descricao">Descrição:</label><br>
+                    <input type="text" id="descricao" th:field="*{descricao}" maxlength="100" required placeholder="Ex: Notebook Dell Inspiron 15">
+                </p>
+
+                <p>
+                    <label for="marca">Marca:</label><br>
+                    <input type="text" id="marca" th:field="*{marca}" maxlength="50" required placeholder="Ex: Dell">
+                </p>
+
+                <p>
+                    <label for="modelo">Modelo:</label><br>
+                    <input type="text" id="modelo" th:field="*{modelo}" maxlength="50" required placeholder="Ex: i15-3520">
+                </p>
+
+                <p>
+                    <label for="valorFormatado">Valor (R$):</label><br>
+                    <input type="text" id="valorFormatado" required placeholder="0,00">
+                    <input type="hidden" id="valor" th:field="*{valor}">
+                </p>
+            </fieldset>
+
+            <fieldset>
+                <legend>Imagem do Produto</legend>
+                <div id="photo-preview-container">
+                    <img id="image-preview"
+                         th:if="${produto.idProduto != null && produto.imagem != null}"
+                         th:src="@{/produtos/imagem/{id}(id=${produto.idProduto})}"
+                         alt="Imagem do Produto"
+                         width="150">
+                    <span id="image-placeholder" th:if="${produto.idProduto == null || produto.imagem == null}">Nenhuma imagem selecionada</span>
+                </div>
+                <p>
+                    <label for="foto">Enviar / Substituir Imagem:</label><br>
+                    <input type="file" id="foto" name="foto" accept="image/*">
+                </p>
+            </fieldset>
+
+            <p>
+                <a th:href="@{/produtos/listar}">Cancelar</a>
+                <button type="submit">Salvar Produto</button>
+            </p>
+        </form>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const valorFormatadoInput = document.getElementById('valorFormatado');
+                const valorHiddenInput = document.getElementById('valor');
+
+                function formatarMoeda(valorNumerico) {
+                    return Number(valorNumerico).toLocaleString('pt-BR', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    });
+                }
+
+                if (valorHiddenInput && valorHiddenInput.value) {
+                    const rawInitial = parseFloat(valorHiddenInput.value);
+                    if (!isNaN(rawInitial)) {
+                        valorFormatadoInput.value = formatarMoeda(rawInitial);
+                    }
+                }
+
+                if (valorFormatadoInput && valorHiddenInput) {
+                    valorFormatadoInput.addEventListener('input', function(e) {
+                        let digits = this.value.replace(/\D/g, '');
+                        if (!digits) {
+                            this.value = '';
+                            valorHiddenInput.value = '';
+                            return;
+                        }
+
+                        let numericValue = (parseInt(digits, 10) / 100).toFixed(2);
+                        this.value = formatarMoeda(numericValue);
+                        valorHiddenInput.value = numericValue;
+                    });
+                }
+
+                const fotoInput = document.getElementById('foto');
+                let imgPreview = document.getElementById('image-preview');
+                const imgPlaceholder = document.getElementById('image-placeholder');
+                const previewContainer = document.getElementById('photo-preview-container');
+
+                if (fotoInput) {
+                    fotoInput.addEventListener('change', function(e) {
+                        const file = e.target.files && e.target.files[0];
+                        if (file) {
+                            const reader = new FileReader();
+                            reader.onload = function(event) {
+                                if (!imgPreview) {
+                                    imgPreview = document.createElement('img');
+                                    imgPreview.id = 'image-preview';
+                                    imgPreview.alt = 'Imagem do Produto';
+                                    imgPreview.width = 150;
+                                    previewContainer.prepend(imgPreview);
+                                }
+                                imgPreview.src = event.target.result;
+                                imgPreview.style.display = 'block';
+                                if (imgPlaceholder) {
+                                    imgPlaceholder.style.display = 'none';
+                                }
+                            };
+                            reader.readAsDataURL(file);
+                        }
+                    });
+                }
+            });
+        </script>
+    </div>
+</body>
+</html>

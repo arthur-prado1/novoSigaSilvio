@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, 'disciplina-criar', ~{::content})}">
+<head>
+    <title th:text="${disciplina.idDisciplina != null ? 'Editar Disciplina | Novo SIGA' : 'Cadastrar Disciplina | Novo SIGA'}">Cadastrar Disciplina | Novo SIGA</title>
+</head>
+<body>
+    <div th:fragment="content">
+        <div>
+            <p><a th:href="@{/disciplinas/listar}">&larr; Voltar para a lista</a></p>
+            <h1 th:text="${disciplina.idDisciplina != null ? 'Editar Disciplina' : 'Cadastrar Disciplina'}">Cadastrar Disciplina</h1>
+        </div>
+
+        <form th:action="@{/disciplinas/salvar}" th:object="${disciplina}" method="post">
+            <input type="hidden" name="idDisciplina" th:field="*{idDisciplina}">
+            
+            <fieldset>
+                <legend>Informações da Disciplina</legend>
+
+                <p>
+                    <label for="nomeDisciplina">Nome da Disciplina:</label><br>
+                    <input type="text" id="nomeDisciplina" th:field="*{nomeDisciplina}" maxlength="100" required placeholder="Ex: Estrutura de Dados">
+                </p>
+
+                <p>
+                    <label for="siglaDisciplina">Sigla:</label><br>
+                    <input type="text" id="siglaDisciplina" th:field="*{siglaDisciplina}" maxlength="10" required placeholder="Ex: ED01">
+                </p>
+
+                <p>
+                    <label for="cargaHorariaDisciplina">Carga Horária (horas):</label><br>
+                    <input type="number" id="cargaHorariaDisciplina" th:field="*{cargaHorariaDisciplina}" min="1" required placeholder="Ex: 80">
+                </p>
+
+                <p>
+                    <label for="curso-input">Curso:</label><br>
+                    <input type="text" id="curso-input" list="lista-cursos" placeholder="Digite ou selecione um curso..."
+                           th:value="${disciplina.curso != null} ? ${disciplina.curso.nomeCurso} : ''">
+                    <input type="hidden" id="curso" name="curso" th:value="${disciplina.curso != null} ? ${disciplina.curso.idCurso} : ''">
+                    <datalist id="lista-cursos">
+                        <option th:each="c : ${cursos}"
+                                th:data-id="${c.idCurso}"
+                                th:value="${c.nomeCurso}">
+                        </option>
+                    </datalist>
+                </p>
+
+                <p>
+                    <label for="professor-input">Professor Responsável:</label><br>
+                    <input type="text" id="professor-input" list="lista-professores" placeholder="Digite ou selecione um professor..."
+                           th:value="${disciplina.professor != null} ? ${disciplina.professor.nomeProfessor} : ''">
+                    <input type="hidden" id="professor" name="professor" th:value="${disciplina.professor != null} ? ${disciplina.professor.idProfessor} : ''">
+                    <datalist id="lista-professores">
+                        <option th:each="p : ${professores}"
+                                th:data-id="${p.idProfessor}"
+                                th:value="${p.nomeProfessor}">
+                        </option>
+                    </datalist>
+                </p>
+            </fieldset>
+
+            <p>
+                <a th:href="@{/disciplinas/listar}">Cancelar</a>
+                <button type="submit">Salvar Disciplina</button>
+            </p>
+        </form>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const cursoInput = document.getElementById('curso-input');
+                const cursoHidden = document.getElementById('curso');
+                const listaCursos = document.getElementById('lista-cursos');
+
+                if (cursoInput && cursoHidden && listaCursos) {
+                    cursoInput.addEventListener('input', function() {
+                        const val = this.value;
+                        const option = Array.from(listaCursos.options).find(opt => opt.value === val);
+                        if (option) {
+                            cursoHidden.value = option.dataset.id;
+                        } else if (!val) {
+                            cursoHidden.value = '';
+                        }
+                    });
+                }
+
+                const profInput = document.getElementById('professor-input');
+                const profHidden = document.getElementById('professor');
+                const listaProfessores = document.getElementById('lista-professores');
+
+                if (profInput && profHidden && listaProfessores) {
+                    profInput.addEventListener('input', function() {
+                        const val = this.value;
+                        const option = Array.from(listaProfessores.options).find(opt => opt.value === val);
+                        if (option) {
+                            profHidden.value = option.dataset.id;
+                        } else if (!val) {
+                            profHidden.value = '';
+                        }
+                    });
+                }
+            });
+        </script>
+    </div>
+</body>
+</html>

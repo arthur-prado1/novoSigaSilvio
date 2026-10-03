@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, 'aluno-criar', ~{::content})}">
+<head>
+    <title th:text="${aluno.idAluno != null ? 'Editar Aluno | Novo SIGA' : 'Cadastrar Aluno | Novo SIGA'}">Cadastrar Aluno | Novo SIGA</title>
+</head>
+<body>
+    <div th:fragment="content">
+        <div>
+            <p><a th:href="@{/alunos/listar}">&larr; Voltar para a lista</a></p>
+            <h1 th:text="${aluno.idAluno != null ? 'Editar Aluno' : 'Cadastrar Aluno'}">Cadastrar Aluno</h1>
+        </div>
+
+        <form th:action="@{/alunos/salvar}" th:object="${aluno}" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="idAluno" th:field="*{idAluno}">
+
+            <fieldset>
+                <legend>Dados Pessoais</legend>
+
+                <p>
+                    <label for="nomeAluno">Nome Completo:</label><br>
+                    <input type="text" id="nomeAluno" th:field="*{nomeAluno}" maxlength="50" required>
+                </p>
+
+                <p>
+                    <label for="curso-input">Curso:</label><br>
+                    <input type="text" id="curso-input" list="lista-cursos" placeholder="Digite ou selecione um curso..."
+                           th:value="${aluno.curso != null} ? ${aluno.curso.nomeCurso} : ''">
+                    <input type="hidden" id="curso" name="curso" th:value="${aluno.curso != null} ? ${aluno.curso.idCurso} : ''">
+                    <datalist id="lista-cursos">
+                        <option th:each="c : ${cursos}"
+                                th:data-id="${c.idCurso}"
+                                th:value="${c.nomeCurso}">
+                        </option>
+                    </datalist>
+                </p>
+
+                <p>
+                    <label for="cpfAluno">CPF:</label><br>
+                    <input type="text" id="cpfAluno" th:field="*{cpfAluno}" maxlength="11" required placeholder="Somente números">
+                </p>
+
+                <p>
+                    <label for="telefoneAluno">Telefone:</label><br>
+                    <input type="text" id="telefoneAluno" th:field="*{telefoneAluno}" maxlength="11" required placeholder="DDD + Número">
+                </p>
+            </fieldset>
+
+            <fieldset>
+                <legend>Endereço</legend>
+
+                <p>
+                    <label for="cepAluno">CEP:</label><br>
+                    <input type="text" id="cepAluno" th:field="*{cepAluno}" maxlength="8" required placeholder="8 dígitos">
+                    <button type="button" id="btn-buscar-cep">Consultar CEP</button>
+                    <span id="cep-feedback"></span>
+                </p>
+
+                <p>
+                    <label for="enderecoAluno">Logradouro / Número:</label><br>
+                    <input type="text" id="enderecoAluno" th:field="*{enderecoAluno}" maxlength="40" required>
+                </p>
+
+                <p>
+                    <label for="bairroAluno">Bairro:</label><br>
+                    <input type="text" id="bairroAluno" th:field="*{bairroAluno}" maxlength="40" required>
+                </p>
+
+                <p>
+                    <label for="cidadeAluno">Cidade:</label><br>
+                    <input type="text" id="cidadeAluno" th:field="*{cidadeAluno}" maxlength="30" required>
+                </p>
+
+                <p>
+                    <label for="estadoAluno">UF:</label><br>
+                    <input type="text" id="estadoAluno" th:field="*{estadoAluno}" list="lista-estados" maxlength="2" required placeholder="UF">
+                    <datalist id="lista-estados">
+                        <option value="AC">Acre</option>
+                        <option value="AL">Alagoas</option>
+                        <option value="AP">Amapá</option>
+                        <option value="AM">Amazonas</option>
+                        <option value="BA">Bahia</option>
+                        <option value="CE">Ceará</option>
+                        <option value="DF">Distrito Federal</option>
+                        <option value="ES">Espírito Santo</option>
+                        <option value="GO">Goiás</option>
+                        <option value="MA">Maranhão</option>
+                        <option value="MT">Mato Grosso</option>
+                        <option value="MS">Mato Grosso do Sul</option>
+                        <option value="MG">Minas Gerais</option>
+                        <option value="PA">Pará</option>
+                        <option value="PB">Paraíba</option>
+                        <option value="PR">Paraná</option>
+                        <option value="PE">Pernambuco</option>
+                        <option value="PI">Piauí</option>
+                        <option value="RJ">Rio de Janeiro</option>
+                        <option value="RN">Rio Grande do Norte</option>
+                        <option value="RS">Rio Grande do Sul</option>
+                        <option value="RO">Rondônia</option>
+                        <option value="RR">Roraima</option>
+                        <option value="SC">Santa Catarina</option>
+                        <option value="SP">São Paulo</option>
+                        <option value="SE">Sergipe</option>
+                        <option value="TO">Tocantins</option>
+                    </datalist>
+                </p>
+            </fieldset>
+
+            <fieldset>
+                <legend>Fotografia do Aluno</legend>
+                <div id="photo-preview-container">
+                    <img id="image-preview"
+                         th:if="${aluno.idAluno != null && aluno.fotoAluno != null}"
+                         th:src="@{/alunos/foto/{id}(id=${aluno.idAluno})}"
+                         alt="Foto do Aluno"
+                         width="150">
+                    <span id="image-placeholder" th:if="${aluno.idAluno == null || aluno.fotoAluno == null}">Nenhuma foto selecionada</span>
+                </div>
+                <p>
+                    <label for="foto">Enviar / Substituir Foto:</label><br>
+                    <input type="file" id="foto" name="foto" accept="image/*">
+                </p>
+            </fieldset>
+
+            <p>
+                <a th:href="@{/alunos/listar}">Cancelar</a>
+                <button type="submit">Salvar Aluno</button>
+            </p>
+        </form>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const fotoInput = document.getElementById('foto');
+                let imgPreview = document.getElementById('image-preview');
+                const imgPlaceholder = document.getElementById('image-placeholder');
+                const previewContainer = document.getElementById('photo-preview-container');
+
+                if (fotoInput) {
+                    fotoInput.addEventListener('change', function(e) {
+                        const file = e.target.files && e.target.files[0];
+                        if (file) {
+                            const reader = new FileReader();
+                            reader.onload = function(event) {
+                                if (!imgPreview) {
+                                    imgPreview = document.createElement('img');
+                                    imgPreview.id = 'image-preview';
+                                    imgPreview.alt = 'Foto do Aluno';
+                                    imgPreview.width = 150;
+                                    previewContainer.prepend(imgPreview);
+                                }
+                                imgPreview.src = event.target.result;
+                                imgPreview.style.display = 'block';
+                                if (imgPlaceholder) {
+                                    imgPlaceholder.style.display = 'none';
+                                }
+                            };
+                            reader.readAsDataURL(file);
+                        }
+                    });
+                }
+
+                const cursoInput = document.getElementById('curso-input');
+                const cursoHidden = document.getElementById('curso');
+                const listaCursos = document.getElementById('lista-cursos');
+
+                if (cursoInput && cursoHidden && listaCursos) {
+                    cursoInput.addEventListener('input', function() {
+                        const val = this.value;
+                        const option = Array.from(listaCursos.options).find(opt => opt.value === val);
+                        if (option) {
+                            cursoHidden.value = option.dataset.id;
+                        } else if (!val) {
+                            cursoHidden.value = '';
+                        }
+                    });
+                }
+
+                const btnBuscarCep = document.getElementById('btn-buscar-cep');
+                const cepInput = document.getElementById('cepAluno');
+                const feedback = document.getElementById('cep-feedback');
+
+                if (btnBuscarCep && cepInput) {
+                    btnBuscarCep.addEventListener('click', async function() {
+                        const rawCep = cepInput.value.replace(/\D/g, '');
+
+                        if (!rawCep || rawCep.length !== 8) {
+                            feedback.textContent = 'Informe um CEP válido com 8 dígitos.';
+                            cepInput.focus();
+                            return;
+                        }
+
+                        const originalHtml = btnBuscarCep.innerHTML;
+                        btnBuscarCep.disabled = true;
+                        btnBuscarCep.textContent = 'Buscando...';
+                        feedback.textContent = '';
+
+                        try {
+                            const response = await fetch(`https://viacep.com.br/ws/${rawCep}/json/`);
+                            if (!response.ok) throw new Error('Erro na requisição');
+                            
+                            const data = await response.json();
+
+                            if (data.erro) {
+                                feedback.textContent = 'CEP não encontrado na base do ViaCEP.';
+                            } else {
+                                if (data.logradouro) {
+                                    document.getElementById('enderecoAluno').value = data.logradouro;
+                                }
+                                if (data.bairro) {
+                                    document.getElementById('bairroAluno').value = data.bairro;
+                                }
+                                if (data.localidade) {
+                                    document.getElementById('cidadeAluno').value = data.localidade;
+                                }
+                                if (data.uf) {
+                                    const selectUf = document.getElementById('estadoAluno');
+                                    selectUf.value = data.uf.toUpperCase();
+                                }
+
+                                feedback.textContent = 'Endereço preenchido com sucesso.';
+                            }
+                        } catch (error) {
+                            feedback.textContent = 'Falha ao consultar CEP.';
+                        } finally {
+                            btnBuscarCep.disabled = false;
+                            btnBuscarCep.innerHTML = originalHtml;
+                        }
+                    });
+                }
+            });
+        </script>
+    </div>
+</body>
+</html>

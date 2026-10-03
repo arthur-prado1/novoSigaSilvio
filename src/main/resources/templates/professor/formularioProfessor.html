@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, 'professor-criar', ~{::content})}">
+<head>
+    <title th:text="${professor.idProfessor != null ? 'Editar Professor | Novo SIGA' : 'Cadastrar Professor | Novo SIGA'}">Cadastrar Professor | Novo SIGA</title>
+</head>
+<body>
+    <div th:fragment="content">
+        <div>
+            <p><a th:href="@{/professores/listar}">&larr; Voltar para a lista</a></p>
+            <h1 th:text="${professor.idProfessor != null ? 'Editar Professor' : 'Cadastrar Professor'}">Cadastrar Professor</h1>
+        </div>
+
+        <form th:action="@{/professores/salvar}" th:object="${professor}" method="post">
+            <input type="hidden" name="idProfessor" th:field="*{idProfessor}">
+            
+            <fieldset>
+                <legend>Dados Pessoais e Titulação</legend>
+
+                <p>
+                    <label for="nomeProfessor">Nome Completo:</label><br>
+                    <input type="text" id="nomeProfessor" th:field="*{nomeProfessor}" maxlength="100" required placeholder="Ex: Dr. Carlos Eduardo Silva">
+                </p>
+
+                <p>
+                    <label for="cpfProfessor">CPF:</label><br>
+                    <input type="text" id="cpfProfessor" th:field="*{cpfProfessor}" maxlength="11" required placeholder="Somente números">
+                </p>
+
+                <p>
+                    <label for="rgProfessor">RG:</label><br>
+                    <input type="text" id="rgProfessor" th:field="*{rgProfessor}" maxlength="20" required placeholder="Número do documento de identidade">
+                </p>
+
+                <p>
+                    <label for="telProfessor">Telefone:</label><br>
+                    <input type="text" id="telProfessor" th:field="*{telProfessor}" maxlength="15" required placeholder="DDD + Número">
+                </p>
+
+                <p>
+                    <label for="graduacaoProfessor">Graduação / Formação:</label><br>
+                    <input type="text" id="graduacaoProfessor" th:field="*{graduacaoProfessor}" maxlength="100" required placeholder="Ex: Ciência da Computação">
+                </p>
+            </fieldset>
+
+            <fieldset>
+                <legend>Endereço de Contato</legend>
+
+                <p>
+                    <label for="endProfessor">Endereço Residencial / Profissional:</label><br>
+                    <input type="text" id="endProfessor" th:field="*{endProfessor}" maxlength="150" required placeholder="Rua, Número, Bairro, Cidade - UF">
+                </p>
+            </fieldset>
+
+            <p>
+                <a th:href="@{/professores/listar}">Cancelar</a>
+                <button type="submit">Salvar Professor</button>
+            </p>
+        </form>
+    </div>
+</body>
+</html>

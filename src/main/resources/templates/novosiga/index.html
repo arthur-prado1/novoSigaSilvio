@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, 'home', ~{::content})}">
+<head>
+    <title>Início | Novo SIGA</title>
+</head>
+<body>
+    <div th:fragment="content">
+        <section>
+            <header>
+                <p>FATEC JALES</p>
+                <p>Centro Paula Souza - Governo de SP</p>
+            </header>
+
+            <h1>Novo SIGA - Portal Acadêmico</h1>
+            <p>
+                Ambiente integrado para gestão acadêmica e institucional. Administre dados discentes, docentes e matrizes curriculares com total segurança e precisão.
+            </p>
+            <p>
+                <a href="https://www.fatecjales.edu.br" target="_blank" rel="noopener noreferrer">Conhecer a Faculdade</a>
+            </p>
+
+            <img th:src="@{/images/fatec-jales.jpg}" alt="Fatec Jales">
+
+            <footer>
+                <p>fatecjales.edu.br | (17) 3632-2239 | Jales, SP</p>
+            </footer>
+        </section>
+    </div>
+</body>
+</html>

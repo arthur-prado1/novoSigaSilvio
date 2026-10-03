@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, 'curso-listar', ~{::content})}">
+<head>
+    <title>Lista de Cursos | Novo SIGA</title>
+</head>
+<body>
+    <div th:fragment="content">
+        <div>
+            <h1>Lista de Cursos</h1>
+            <p>
+                <span th:text="${#lists.size(cursos)}">0</span> cursos encontrados na base.
+            </p>
+            <p>
+                <a th:href="@{/cursos/criar}">Novo Curso</a>
+            </p>
+        </div>
+
+        <div th:if="${not #lists.isEmpty(cursos)}">
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Curso</th>
+                        <th>Descrição</th>
+                        <th>Carga Horária</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="curso : ${cursos}">
+                        <td th:text="${curso.idCurso}"></td>
+                        <td th:text="${curso.nomeCurso}"></td>
+                        <td th:text="${curso.descricaoCurso}"></td>
+                        <td th:text="${curso.cargaHorariaCurso} + ' horas'"></td>
+                        <td>
+                            <a th:href="@{/cursos/editar/{id}(id=${curso.idCurso})}">Editar</a>
+                            |
+                            <a th:href="@{/cursos/excluir/{id}(id=${curso.idCurso})}"
+                               onclick="return confirm('Deseja realmente excluir este curso?')">Excluir</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div th:if="${#lists.isEmpty(cursos)}">
+            <h3>Nenhum curso cadastrado</h3>
+            <p>Não existem cursos acadêmicos cadastrados na base.</p>
+            <p><a th:href="@{/cursos/criar}">Cadastrar Curso</a></p>
+        </div>
+    </div>
+</body>
+</html>

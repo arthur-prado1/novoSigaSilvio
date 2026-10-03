@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, 'curso-criar', ~{::content})}">
+<head>
+    <title th:text="${curso.idCurso != null ? 'Editar Curso | Novo SIGA' : 'Cadastrar Curso | Novo SIGA'}">Cadastrar Curso | Novo SIGA</title>
+</head>
+<body>
+    <div th:fragment="content">
+        <div>
+            <p><a th:href="@{/cursos/listar}">&larr; Voltar para a lista</a></p>
+            <h1 th:text="${curso.idCurso != null ? 'Editar Curso' : 'Cadastrar Curso'}">Cadastrar Curso</h1>
+        </div>
+
+        <form th:action="@{/cursos/salvar}" th:object="${curso}" method="post">
+            <input type="hidden" name="idCurso" th:field="*{idCurso}">
+            
+            <fieldset>
+                <legend>Informações do Curso</legend>
+
+                <p>
+                    <label for="nomeCurso">Nome do Curso:</label><br>
+                    <input type="text" id="nomeCurso" th:field="*{nomeCurso}" maxlength="100" required placeholder="Ex: Engenharia de Software">
+                </p>
+
+                <p>
+                    <label for="descricaoCurso">Descrição:</label><br>
+                    <textarea id="descricaoCurso" th:field="*{descricaoCurso}" maxlength="255" required rows="3"></textarea>
+                </p>
+
+                <p>
+                    <label for="cargaHorariaCurso">Carga Horária (horas):</label><br>
+                    <input type="number" id="cargaHorariaCurso" th:field="*{cargaHorariaCurso}" min="1" required placeholder="Ex: 3200">
+                </p>
+            </fieldset>
+
+            <p>
+                <a th:href="@{/cursos/listar}">Cancelar</a>
+                <button type="submit">Salvar Curso</button>
+            </p>
+        </form>
+    </div>
+</body>
+</html>

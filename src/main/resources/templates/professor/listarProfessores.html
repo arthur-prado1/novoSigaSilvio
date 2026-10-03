@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, 'professor-listar', ~{::content})}">
+<head>
+    <title>Lista de Professores | Novo SIGA</title>
+</head>
+<body>
+    <div th:fragment="content">
+        <div>
+            <h1>Lista de Professores</h1>
+            <p>
+                <span th:text="${#lists.size(professores)}">0</span> professores encontrados na base.
+            </p>
+            <p>
+                <a th:href="@{/professores/criar}">Novo Professor</a>
+            </p>
+        </div>
+
+        <div th:if="${mensagemErro}">
+            <p><strong th:text="${mensagemErro}"></strong></p>
+        </div>
+        <div th:if="${mensagemSucesso}">
+            <p><strong th:text="${mensagemSucesso}"></strong></p>
+        </div>
+
+        <div th:if="${not #lists.isEmpty(professores)}">
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Professor</th>
+                        <th>Graduação</th>
+                        <th>CPF</th>
+                        <th>RG</th>
+                        <th>Telefone</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="professor : ${professores}">
+                        <td th:text="${professor.idProfessor}"></td>
+                        <td th:text="${professor.nomeProfessor}"></td>
+                        <td th:text="${professor.graduacaoProfessor}"></td>
+                        <td th:text="${professor.cpfProfessor}"></td>
+                        <td th:text="${professor.rgProfessor}"></td>
+                        <td th:text="${professor.telProfessor}"></td>
+                        <td>
+                            <a th:href="@{/professores/editar/{id}(id=${professor.idProfessor})}">Editar</a>
+                            |
+                            <a th:href="@{/professores/excluir/{id}(id=${professor.idProfessor})}"
+                               onclick="return confirm('Deseja realmente excluir este professor?')">Excluir</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div th:if="${#lists.isEmpty(professores)}">
+            <h3>Nenhum professor cadastrado</h3>
+            <p>Não existem professores cadastrados na base acadêmica.</p>
+            <p><a th:href="@{/professores/criar}">Cadastrar Professor</a></p>
+        </div>
+    </div>
+</body>
+</html>

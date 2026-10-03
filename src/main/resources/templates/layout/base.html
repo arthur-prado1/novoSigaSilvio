@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org" th:fragment="layout(title, activePage, content)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:replace="${title}">Novo SIGA</title>
+</head>
+<body>
+    <header>
+        <h2>Novo SIGA - Portal Acadêmico</h2>
+        <nav>
+            <ul>
+                <li><a th:href="@{/novosiga}">Início</a></li>
+                <li><a th:href="@{/alunos/listar}">Alunos</a></li>
+                <li><a th:href="@{/professores/listar}">Professores</a></li>
+                <li><a th:href="@{/cursos/listar}">Cursos</a></li>
+                <li><a th:href="@{/disciplinas/listar}">Disciplinas</a></li>
+                <li><a th:href="@{/produtos/listar}">Produtos</a></li>
+                <li><a th:href="@{/pedidos/listar}">Pedidos</a></li>
+            </ul>
+        </nav>
+        <hr>
+    </header>
+
+    <main>
+        <div th:replace="${content}"></div>
+    </main>
+
+    <footer>
+        <hr>
+        <p>Novo SIGA &mdash; Sistema de Gestão Acadêmica</p>
+    </footer>
+</body>
+</html>

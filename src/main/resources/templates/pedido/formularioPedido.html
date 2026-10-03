@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, 'pedido-criar', ~{::content})}">
+<head>
+    <title th:text="${pedido.idPedido != null ? 'Editar Pedido | Novo SIGA' : 'Cadastrar Pedido | Novo SIGA'}">Cadastrar Pedido | Novo SIGA</title>
+</head>
+<body>
+    <div th:fragment="content">
+        <div>
+            <p><a th:href="@{/pedidos/listar}">&larr; Voltar para a lista</a></p>
+            <h1 th:text="${pedido.idPedido != null ? 'Editar Pedido' : 'Cadastrar Pedido'}">Cadastrar Pedido</h1>
+        </div>
+
+        <form th:action="@{/pedidos/salvar}" th:object="${pedido}" method="post" id="formPedido">
+            <input type="hidden" name="idPedido" th:field="*{idPedido}">
+
+            <fieldset>
+                <legend>Informações Principais</legend>
+
+                <p>
+                    <label for="aluno">Aluno:</label><br>
+                    <input type="text" id="aluno" list="listaAlunos" placeholder="Digite ou selecione um aluno..." required
+                           th:value="${pedido.aluno != null} ? ${pedido.aluno.idAluno + ' - ' + pedido.aluno.nomeAluno} : ''">
+                    <datalist id="listaAlunos">
+                        <option th:each="a : ${alunos}"
+                                th:value="${a.idAluno + ' - ' + a.nomeAluno}">
+                        </option>
+                    </datalist>
+                </p>
+
+                <p>
+                    <label for="dataPedido">Data do Pedido:</label><br>
+                    <input type="date" id="dataPedido" th:field="*{dataPedido}" required>
+                </p>
+            </fieldset>
+
+            <fieldset>
+                <legend>Itens do Pedido</legend>
+
+                <div>
+                    <label for="produto">Produto:</label>
+                    <input type="text" id="produto" list="listaProdutos" placeholder="Digite para buscar...">
+                    <datalist id="listaProdutos">
+                        <option th:each="p : ${produtos}"
+                                th:data-preco="${p.valor}"
+                                th:data-tem-imagem="${p.imagem != null}"
+                                th:value="${p.idProduto + ' - ' + p.descricao}">
+                        </option>
+                    </datalist>
+
+                    <label for="quantidade">Quantidade:</label>
+                    <input type="number" id="quantidade" min="1" value="1"
+                           oninput="if(this.value < 1 && this.value !== '') this.value = 1">
+
+                    <button type="button" onclick="adicionarItem()">Adicionar Item</button>
+                </div>
+
+                <br>
+
+                <table border="1" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Produto</th>
+                            <th>Qtd</th>
+                            <th>Preço Unitário</th>
+                            <th>Subtotal</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-itens">
+                        <tr class="empty-row" id="empty-row"><td colspan="5">Nenhum produto adicionado ao pedido.</td></tr>
+                    </tbody>
+                </table>
+
+                <p>
+                    <strong>Total do Pedido: R$ <span id="totalPedido">0,00</span></strong>
+                </p>
+            </fieldset>
+
+            <p>
+                <a th:href="@{/pedidos/listar}">Cancelar</a>
+                <button type="button" onclick="salvarPedido()">Salvar Pedido</button>
+            </p>
+        </form>
+
+        <script>
+            let itens = [];
+
+            document.addEventListener('DOMContentLoaded', function() {
+                const dataPedidoInput = document.getElementById('dataPedido');
+                if (dataPedidoInput && !dataPedidoInput.value) {
+                    dataPedidoInput.value = new Date().toISOString().split('T')[0];
+                }
+            });
+
+            function adicionarItem() {
+                let produtoInput = document.getElementById("produto").value;
+                let quantidade = document.getElementById("quantidade").value;
+
+                if (!produtoInput || quantidade <= 0) {
+                    alert("Preencha corretamente o produto e a quantidade!");
+                    return;
+                }
+
+                let partes = produtoInput.split(" - ");
+                let produtoId = partes[0];
+                let produtoNome = partes[1];
+
+                let options = document.querySelectorAll("#listaProdutos option");
+                let preco = null;
+                let temImagem = false;
+
+                options.forEach(opt => {
+                    if (opt.value === produtoInput) {
+                        preco = opt.getAttribute("data-preco");
+                        temImagem = opt.getAttribute("data-tem-imagem") === "true";
+                    }
+                });
+
+                if (!preco) {
+                    alert("Produto inválido! Selecione um produto da lista.");
+                    return;
+                }
+
+                let subtotal = quantidade * preco;
+
+                itens.push({
+                    produto: { idProduto: produtoId },
+                    nomeProduto: produtoNome,
+                    temImagem: temImagem,
+                    quantidade: parseInt(quantidade),
+                    preco: parseFloat(preco),
+                    subtotal: subtotal
+                });
+
+                document.getElementById("produto").value = "";
+                document.getElementById("quantidade").value = "";
+
+                renderTabela();
+            }
+
+            function removerItem(index) {
+                itens.splice(index, 1);
+                renderTabela();
+            }
+
+            function atualizarQuantidade(index, novaQtdValor) {
+                let novaQtd = parseInt(novaQtdValor);
+                if (isNaN(novaQtd) || novaQtd < 1) {
+                    novaQtd = 1;
+                }
+                itens[index].quantidade = novaQtd;
+                itens[index].subtotal = novaQtd * itens[index].preco;
+                renderTabela();
+            }
+
+            function renderTabela() {
+                let tabela = document.getElementById("tabela-itens");
+
+                tabela.innerHTML = "";
+
+                if (itens.length === 0) {
+                    tabela.innerHTML = `<tr class="empty-row" id="empty-row"><td colspan="5">Nenhum produto adicionado ao pedido.</td></tr>`;
+                    document.getElementById("totalPedido").innerText = "0,00";
+                    return;
+                }
+
+                let total = 0;
+
+                itens.forEach((item, index) => {
+                    total += item.subtotal;
+                    tabela.innerHTML += `
+<tr>
+    <td>${item.nomeProduto} (ID: ${item.produto.idProduto})</td>
+    <td align="center">
+        <input type="number" min="1" value="${item.quantidade}"
+               onchange="atualizarQuantidade(${index}, this.value)"
+               onblur="atualizarQuantidade(${index}, this.value)"
+               onkeydown="if(event.key === 'Enter'){ event.preventDefault(); this.blur(); }">
+    </td>
+    <td align="right">R$ ${item.preco.toFixed(2).replace('.', ',')}</td>
+    <td align="right">R$ ${item.subtotal.toFixed(2).replace('.', ',')}</td>
+    <td align="center"><button type="button" onclick="removerItem(${index})">Remover</button></td>
+</tr>
+                    `;
+                });
+
+                document.getElementById("totalPedido").innerText = total.toFixed(2).replace('.', ',');
+            }
+
+            function salvarPedido() {
+                let alunoInput = document.getElementById("aluno").value;
+
+                if (!alunoInput) {
+                    alert("Selecione um aluno antes de salvar!");
+                    return;
+                }
+
+                if (itens.length === 0) {
+                    alert("Adicione ao menos um produto ao pedido!");
+                    return;
+                }
+
+                let alunoId = alunoInput.split(" - ")[0];
+
+                let pedido = {
+                    aluno: { idAluno: alunoId },
+                    itens: itens
+                };
+
+                fetch("/pedidos", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(pedido)
+                })
+                .then(async res => {
+                    if (!res.ok) {
+                        const erroTexto = await res.text();
+                        throw new Error(erroTexto || "Erro no servidor");
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    alert("Pedido salvo com sucesso!");
+                    window.location.href = "/pedidos/listar";
+                })
+                .catch(err => {
+                    alert("Erro ao salvar o pedido. Tente novamente.");
+                    console.error(err);
+                });
+            }
+        </script>
+    </div>
+</body>
+</html>
